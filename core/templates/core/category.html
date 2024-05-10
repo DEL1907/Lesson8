@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block links %}
+<div class="col-md-3">
+    <ul class="list-group">
+        {%for category in categories %}
+        <a href="{{ p.get_absolute_url }}" class="list-group-item">{{ category.title }}</a>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}
+
+{% block category %}
+<div class="col-md-9">
+    {% for item in res %}
+    <div class="card mt-3 mb-3">
+        <div class="card-header">
+            Категория: <a href="{% url 'category' item.category.slug %}">{{item.category.slug}}</a>
+        </div>
+        <div class="card-body">
+            <div class="media">
+                {% if item.image %}
+                <img src={{item.image.url}} alt="" width="300" height="300">
+                {% else %}
+                <img src="https://loremflickr.com/300/300" alt="">
+                {% endif %}
+            </div>
+            <h5 class="card-title">{{ item.title }}</h5>
+            <p class="card-text">{{ item.description }}</p>
+            <p class="card-text">{{ ingredients }}</p>
+            <a href="#" class="btn btn-primary">Read more...</a>
+        </div>
+        <div class="card-footer text-body-secondary">
+            {{ item.created_at|date:"Y:m:d H:i" }}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
+
+
