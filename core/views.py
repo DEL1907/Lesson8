@@ -1,7 +1,7 @@
-from django.shortcuts import render, get_object_or_404
-
-from . import models
-from .models import Category
+from django.shortcuts import render
+from django.utils.timezone import now
+from django.views.generic import ListView, TemplateView, DetailView, RedirectView, FormView
+from . import models, forms
 
 
 def index(request):
@@ -27,15 +27,44 @@ def get_category(request, category_id):
     return render(request, template_name='core/category.html', context=context)
 
 
-def show_category(request, category_slug):
-    cat = get_object_or_404(Category, slug=category_slug)
-    res = models.Recipes.objects.filter(slug=category_slug)
-    category = models.Category.objects.get(pk=category_slug)
-    data = {
-        'title': Category.title,
-        'res': res,
-        'cat': cat,
-        'category': category,
-    }
+class ClassBasedIndex(TemplateView):
+    template_name = 'core/ind.html'
 
-    return render(request, 'core/category.html', context=data)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context['additional_info'] = now()
+        return context
+
+
+class RecipeList(ListView):
+    model = models.Recipes
+    context_object_name = "recipes"
+    template_name = 'core/recipes_list.html'
+
+
+class RecipeDetail(DetailView):
+    model = models.Recipes
+    context_object_name = 'recipe'
+    template_name = 'core/recipes_detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context['additional_info'] = 'Делитесь вкусными рецептами'
+        return context
+
+
+class Redirect(RedirectView):
+    query_string = True
+    url = 'http://paranoia.com/'
+
+
+class SimpleForm(FormView):
+    template_name = 'core/form.html'
+    form_class = forms.SimpleForm
+    success_url = "/index_class/"
+
+    def form_valid(self, form):
+        print(form.cleaned_data)
+        return super().form_valid(form)

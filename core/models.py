@@ -1,5 +1,4 @@
 from django.db import models
-from django.urls import reverse
 
 
 class Recipes(models.Model):
@@ -23,7 +22,6 @@ class Recipes(models.Model):
 
 class Category(models.Model):
     title = models.CharField(max_length=150, db_index=True, verbose_name='Наименование категории')
-    slug = models.SlugField(max_length=255, unique=True, db_index=True)
 
     def __str__(self):
         return self.title
@@ -32,6 +30,3 @@ class Category(models.Model):
         verbose_name = 'Категория'
         verbose_name_plural = 'Категории'
         ordering = ['title']
-
-    def get_absolute_url(self):
-        return reverse('category', kwargs={'category_slug': self.slug})

@@ -4,7 +4,7 @@
 <div class="col-md-3">
     <ul class="list-group">
         {%for category in categories %}
-        <a href="{{ p.get_absolute_url }}" class="list-group-item">{{ category.title }}></a>
+        <a href="{% url 'category' category.pk %}" class="list-group-item">{{ category.title }}</a>
         {% endfor %}
     </ul>
 </div>
@@ -15,14 +15,14 @@
     {% for item in res %}
     <div class="card mt-3 mb-3">
         <div class="card-header">
-            Категория: <a href="{{ p.get_absolute_url }}">{{item.category}}</a>
+            Категория: <a href="{% url 'category' item.category.pk %}">{{item.category}}</a>
         </div>
         <div class="card-body">
             <div class="media">
                 {% if item.image %}
                 <img src={{item.image.url}} alt="" width="300" height="300">
                 {% else %}
-                <img src="https://loremflickr.com/300/300" alt="">
+                <img src="https://placebeard.it/300x300" alt="">
                 {% endif %}
             </div>
             <h5 class="card-title">{{ item.title }}</h5>
